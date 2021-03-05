@@ -1,5 +1,5 @@
 //implementation of max heap
-#include<iostream>
+#include <iostream>
 
 #include "node.h"
 #include "list.h"
@@ -71,7 +71,7 @@ void delete_max()
 	}
 	swap(heap.head, heap.last_node); //swap min element with the last node in heap
 	std::cout << heap.last_node->key << " is deleted\n";
-	delete_last_node();	   //delete last node in the heap
+	delete_last_node();		  //delete last node in the heap
 	if (heap.head != nullptr) //if the heap is not empty
 		sift_down(heap.head);
 }
@@ -79,7 +79,7 @@ void delete_max()
 void sift_down(node *parent)
 {
 	node *largest_child = find_largest_child(parent); //find largest child of node
-	if (largest_child == nullptr)						  //leaf node
+	if (largest_child == nullptr)					  //leaf node
 		return;
 	if (largest_child->key > parent->key) //if child violates heap property
 	{
