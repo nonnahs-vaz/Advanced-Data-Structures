@@ -2,34 +2,31 @@
 #include <iostream>
 
 #include "node.h"
-#include "list.h"
 #include "max_heap.h"
 
-list heap;
-
-void init_heap()
+void heap::init_heap()
 {
-	heap.head = nullptr;
-	heap.last_node = nullptr;
+	this->head = nullptr;
+	this->last_node = nullptr;
 }
 
-void insert(int value)
+void heap::insert(int value)
 {
 	node *new_node;
 	new_node = create_node(value);
-	if (heap.head == nullptr) //if heap is empty
-		heap.head = new_node;
+	if (this->head == nullptr) //if heap is empty
+		this->head = new_node;
 	else
 	{
-		heap.last_node->next = new_node; //append node at end of heap
-		resolve_relationships(new_node); //resolve parent-child relationships of new node
-		sift_up(new_node);				 //checking for heap property
+		this->last_node->next = new_node; //append node at end of heap
+		resolve_relationships(new_node);  //resolve parent-child relationships of new node
+		sift_up(new_node);				  //checking for heap property
 	}
-	heap.last_node = new_node;
+	this->last_node = new_node;
 	std::cout << value << " has been inserted\n";
 }
 
-void resolve_relationships(node *new_node)
+void heap::resolve_relationships(node *new_node)
 {
 	node *incomplete_node = find_incomplete_node(); //find the first incomplete node in the heap
 	if (incomplete_node->left_child == nullptr)
@@ -39,10 +36,10 @@ void resolve_relationships(node *new_node)
 	new_node->parent = incomplete_node;
 }
 
-node *find_incomplete_node()
+node *heap::find_incomplete_node()
 {
 	node *itr;
-	for (itr = heap.head; itr != nullptr; itr = itr->next) //search for first incomplete node
+	for (itr = this->head; itr != nullptr; itr = itr->next) //search for first incomplete node
 	{
 		if ((itr->left_child == nullptr) || (itr->right_child == nullptr))
 			return itr;
@@ -50,7 +47,7 @@ node *find_incomplete_node()
 	return nullptr;
 }
 
-void sift_up(node *child)
+void heap::sift_up(node *child)
 {
 	node *parent = child->parent;
 	if (parent == nullptr) //reached root
@@ -62,21 +59,21 @@ void sift_up(node *child)
 	}
 }
 
-void delete_max()
+void heap::delete_max()
 {
-	if (heap.head == nullptr)
+	if (this->head == nullptr)
 	{
 		std::cout << "\nheap is empty\n";
 		return;
 	}
-	swap(heap.head, heap.last_node); //swap min element with the last node in heap
-	std::cout << heap.last_node->key << " is deleted\n";
-	delete_last_node();		  //delete last node in the heap
-	if (heap.head != nullptr) //if the heap is not empty
-		sift_down(heap.head);
+	swap(this->head, this->last_node); //swap min element with the last node in heap
+	std::cout << this->last_node->key << " is deleted\n";
+	delete_last_node();		   //delete last node in the heap
+	if (this->head != nullptr) //if the heap is not empty
+		sift_down(this->head);
 }
 
-void sift_down(node *parent)
+void heap::sift_down(node *parent)
 {
 	node *largest_child = find_largest_child(parent); //find largest child of node
 	if (largest_child == nullptr)					  //leaf node
@@ -88,7 +85,7 @@ void sift_down(node *parent)
 	}
 }
 
-node *find_largest_child(node *parent)
+node *heap::find_largest_child(node *parent)
 {
 	if (parent->left_child && parent->right_child)															  //if both children exist
 		return parent->left_child->key > parent->right_child->key ? parent->left_child : parent->right_child; //return largest child
@@ -100,33 +97,33 @@ node *find_largest_child(node *parent)
 		return nullptr; //no children
 }
 
-void delete_last_node()
+void heap::delete_last_node()
 {
 	node *itr;
-	if (heap.head == heap.last_node) //only one node in heap
+	if (this->head == this->last_node) //only one node in heap
 	{
-		delete heap.head;
-		heap.head = heap.last_node = nullptr;
+		delete this->head;
+		this->head = this->last_node = nullptr;
 	}
 	else
 	{
 		update_parent_of_last_node(); //remove link from parent of last node to last node
-		for (itr = heap.head; itr->next != heap.last_node; itr = itr->next)
+		for (itr = this->head; itr->next != this->last_node; itr = itr->next)
 			; //find second last node in heap
-		delete heap.last_node;
-		heap.last_node = itr; //re assign last node to second last node
+		delete this->last_node;
+		this->last_node = itr; //re assign last node to second last node
 	}
 }
 
-void update_parent_of_last_node()
+void heap::update_parent_of_last_node()
 {
-	if (heap.last_node->parent->left_child == heap.last_node) //if last node is left child of its parent
-		heap.last_node->parent->left_child = nullptr;
+	if (this->last_node->parent->left_child == this->last_node) //if last node is left child of its parent
+		this->last_node->parent->left_child = nullptr;
 	else
-		heap.last_node->parent->right_child = nullptr;
+		this->last_node->parent->right_child = nullptr;
 }
 
-node *create_node(int value)
+node *heap::create_node(int value)
 {
 	node *new_node = new node;
 	new_node->key = value;
@@ -134,18 +131,18 @@ node *create_node(int value)
 	return new_node;
 }
 
-void display()
+void heap::display()
 {
-	if (heap.head == nullptr)
+	if (this->head == nullptr)
 	{
 		std::cout << "\nheap is empty\n";
 		return;
 	}
 	std::cout << "\nin-order traversal of heap is:\n";
-	inorder(heap.head);
+	inorder(this->head);
 }
 
-void inorder(node *root)
+void heap::inorder(node *root)
 {
 	if (root != nullptr)
 	{
@@ -155,7 +152,7 @@ void inorder(node *root)
 	}
 }
 
-void swap(node *a, node *b)
+void heap::swap(node *a, node *b)
 {
 	int temp = a->key;
 	a->key = b->key;
